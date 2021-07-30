@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -133,3 +135,10 @@ def add_page(request, category_name_slug):
               return HttpResponse("Invalid login details supplied.")
         else:     
               return render(request, 'rango/login.html')
+
+    def restricted(request):
+              return HttpResponse("Since you're logged in, you can see this text!")
+    
+    def user_logout(request):
+              logout(request)
+              return redirect(reverse('rango:index'))
